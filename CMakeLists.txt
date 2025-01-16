@@ -3,32 +3,37 @@ cmake_minimum_required(VERSION 3.10)
 project(vieiraChess)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
 set(SOURCES
     src/main.cpp
-    src/pieces/BasePiece.cpp
-    src/pieces/Bishop.cpp
-    src/pieces/King.cpp
-    src/pieces/Knight.cpp
-    src/pieces/Pawn.cpp
-    src/pieces/Queen.cpp
-    src/pieces/Rook.cpp
+    src/pieces/bishop.cpp
+    src/pieces/king.cpp
+    src/pieces/knight.cpp
+    src/pieces/pawn.cpp
+    src/pieces/queen.cpp
+    src/pieces/rook.cpp
+    src/view/chess_window.cpp
+    src/view/board_widget.cpp
 )
 
 set(HEADERS
-    src/pieces/BasePiece.h
-    src/pieces/Bishop.h
-    src/pieces/King.h
-    src/pieces/Knight.h
-    src/pieces/Pawn.h
-    src/pieces/Queen.h
-    src/pieces/Rook.h
+    src/pieces/base_piece.h
+    src/pieces/bishop.h
+    src/pieces/king.h
+    src/pieces/knight.h
+    src/pieces/pawn.h
+    src/pieces/queen.h
+    src/pieces/rook.h
+    src/view/chess_window.h
+    src/view/board_widget.h
 )
 
 add_executable(vieiraChess ${SOURCES} ${HEADERS})
 
-target_link_libraries(vieiraChess Qt5::Core Qt5::Gui)
+target_link_libraries(vieiraChess Qt5::Core Qt5::Gui Qt5::Widgets)

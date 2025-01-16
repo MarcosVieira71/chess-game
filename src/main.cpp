@@ -1,16 +1,12 @@
 #include <QApplication>
+#include "view/chess_window.h"
 
-int main(void) {
-    QApplication app(argc, argv);
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv); // Inicializa o QApplication
 
-    // Modelo (tabuleiro de xadrez).
-    Board board;
-    board.initialize();
-
-    // Janela principal (visualização).
-    ChessWindow window(board);
+    ChessWindow window;
     window.setWindowTitle("Jogo de Xadrez");
     window.show();
 
-    return app.exec();
+    return app.exec(); // Inicia o loop de eventos
 }
