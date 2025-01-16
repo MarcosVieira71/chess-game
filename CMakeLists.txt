@@ -12,6 +12,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 
 set(SOURCES
     src/main.cpp
+    src/board/board.cpp
     src/pieces/bishop.cpp
     src/pieces/king.cpp
     src/pieces/knight.cpp
@@ -23,6 +24,7 @@ set(SOURCES
 )
 
 set(HEADERS
+    src/board/board.h
     src/pieces/base_piece.h
     src/pieces/bishop.h
     src/pieces/king.h
