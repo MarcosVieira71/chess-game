@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include "controller/controller.h"
 #include "board_widget.h"
 
 class ChessWindow : public QMainWindow {
@@ -11,6 +12,7 @@ public:
     virtual ~ChessWindow(); 
 
 private:
+    Controller* controller;
     BoardWidget* chessBoard;
 };
 

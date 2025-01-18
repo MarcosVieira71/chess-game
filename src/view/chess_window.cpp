@@ -3,8 +3,8 @@
 #include "chess_window.h"
 
 ChessWindow::ChessWindow(QWidget* parent)
-    : QMainWindow(parent), chessBoard(new BoardWidget(this)) 
-{
+    : QMainWindow(parent), chessBoard(new BoardWidget(this)),
+    controller(new Controller(new Board, chessBoard)){
     setWindowTitle("Chess Game");
 
     QWidget* borderWidget = new QWidget(this);
@@ -25,4 +25,6 @@ ChessWindow::ChessWindow(QWidget* parent)
     resize(800, 800);
 }
 
-ChessWindow::~ChessWindow() {}
+ChessWindow::~ChessWindow(){
+    delete controller;
+}

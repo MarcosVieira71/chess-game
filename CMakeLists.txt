@@ -21,6 +21,7 @@ set(SOURCES
     src/pieces/rook.cpp
     src/view/chess_window.cpp
     src/view/board_widget.cpp
+    src/controller/controller.cpp
 )
 
 set(HEADERS
@@ -34,6 +35,7 @@ set(HEADERS
     src/pieces/rook.h
     src/view/chess_window.h
     src/view/board_widget.h
+    src/controller/controller.h
 )
 
 add_executable(vieiraChess ${SOURCES} ${HEADERS})
