@@ -12,7 +12,7 @@ public:
     virtual ~ChessWindow(); 
 
 private:
-    Controller* controller;
     BoardWidget* chessBoard;
+    Controller* controller;
 };
 

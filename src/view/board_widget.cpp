@@ -1,6 +1,7 @@
 #include <QDebug>
 
 #include "board_widget.h"
+#include "pieces/pawn.h"
 
 BoardWidget::BoardWidget(QWidget* parent)
     : QWidget(parent), squareSize(75){
@@ -14,6 +15,7 @@ QSize BoardWidget::sizeHint() const{
 void BoardWidget::paintEvent(QPaintEvent* event){
     QPainter painter(this);
     drawBoard(painter);
+    drawPieces(painter);
 }
 
 void BoardWidget::drawBoard(QPainter& painter){
@@ -25,6 +27,26 @@ void BoardWidget::drawBoard(QPainter& painter){
         }
     }
 }
+
+void BoardWidget::updateSquares(int row, int col, BasePiece* piece){
+    auto pos = std::make_pair(row, col);
+    squaresUpdate[piece] = pos;
+    update();
+}
+
+
+void BoardWidget::drawPieces(QPainter& painter){
+    for(auto squares: squaresUpdate){
+        auto piece = squares.first;
+        auto position = squares.second;
+        auto row = position.first;
+        auto col = position.second;
+        QRect square(col * squareSize, row * squareSize, squareSize, squareSize);
+        painter.setBrush(Qt::red);
+        painter.drawRect(square);
+    }
+}
+
 
 
 void BoardWidget::mousePressEvent(QMouseEvent* event){

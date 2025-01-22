@@ -8,8 +8,4 @@ public:
 
     PieceType getType() const override;
     bool isValidMovement(int startX, int endX, int startY, int endY) override;
-    
-private:
-    Colors color;
-
 };

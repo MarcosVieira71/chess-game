@@ -9,7 +9,7 @@ public:
     : board(board), view(view), currentPlayer(Colors::White), 
       selectedX(-1), selectedY(-1), isSelectingPiece(false) {
         initializeGame();
-      };
+    };
 
     void initializeGame();
     void handleMouseClick(int x, int y);
