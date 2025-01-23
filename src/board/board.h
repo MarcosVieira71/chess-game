@@ -1,6 +1,13 @@
+#pragma once
+
 #include <array>
 #include "pieces/base_piece.h"
 #include "pieces/pawn.h"
+#include "pieces/king.h"
+#include "pieces/queen.h"
+#include "pieces/bishop.h"
+#include "pieces/knight.h"
+#include "pieces/rook.h"
 
 class Board
 {

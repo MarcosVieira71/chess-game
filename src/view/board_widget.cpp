@@ -1,11 +1,40 @@
 #include <QDebug>
 
 #include "board_widget.h"
-#include "pieces/pawn.h"
 
 BoardWidget::BoardWidget(QWidget* parent)
     : QWidget(parent), squareSize(75){
     setMinimumSize(boardSize * squareSize, boardSize * squareSize); 
+    initImgMap();
+    
+}
+
+void BoardWidget::initImgMap(){
+    
+    std::array<PieceType, 6> piecesTypes = {
+        PieceType::King,  PieceType::Knight,
+        PieceType::Queen, PieceType::Bishop,
+        PieceType::Pawn,  PieceType::Rook,
+    };
+
+    std::array<Colors, 2> colors = {Colors::White, Colors::Black};
+    std::array<std::string, 6> pieceNames = {"king", "knight", "queen", "bishop", "pawn", "rook"};
+    
+    std::string basePath = "src/pieces/assets/";
+    for(int i = 0; i < 2; i++){
+        
+        std::string colorPath = i == 0 ? "white/white-" : "black/black-";
+        std::map<PieceType, std::string> coloredPiecesImgMap;
+        
+        for(int j = 0; j < 6; j++){
+            std::string pieceName = pieceNames[j];
+            auto imgPath = basePath + colorPath + pieceName + ".png";    
+            coloredPiecesImgMap[piecesTypes[j]] = imgPath;
+        }
+
+        piecesImages[colors[i]] = coloredPiecesImgMap;
+    }
+
 }
 
 QSize BoardWidget::sizeHint() const{
@@ -42,8 +71,15 @@ void BoardWidget::drawPieces(QPainter& painter){
         auto row = position.first;
         auto col = position.second;
         QRect square(col * squareSize, row * squareSize, squareSize, squareSize);
-        painter.setBrush(Qt::red);
-        painter.drawRect(square);
+        
+        auto color = piece->getColor();
+        auto type = piece->getType();
+        auto mapColor = piecesImages[color];
+        auto imgPath = mapColor[type];
+        QPixmap imgPng(QString::fromStdString(imgPath)); 
+        
+        QPixmap scaledImg = imgPng.scaled(square.size(), Qt::KeepAspectRatio);
+        painter.drawPixmap(square.topLeft(), scaledImg);
     }
 }
 

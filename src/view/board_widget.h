@@ -1,12 +1,15 @@
 #pragma once
 
+#include "pieces/base_piece.h"
+
+#include <map>
 #include <QWidget>
 #include <QPainter>
 #include <QMouseEvent>
-#include "pieces/base_piece.h"
-#include <map>
+#include <QPixmap>
+#include <QString>
+#include <string>
 #include <utility>
-
 
 class BoardWidget : public QWidget {
     Q_OBJECT
@@ -18,6 +21,7 @@ public:
     void updateSquares(int row, int col, BasePiece* piece);
 
 protected:
+    void initImgMap();
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override; 
 
@@ -26,6 +30,7 @@ private:
     void drawPieces(QPainter& painter);
 
     std::map<BasePiece*, std::pair<int, int>> squaresUpdate;
+    std::map<Colors, std::map<PieceType, std::string>> piecesImages; 
     static constexpr int boardSize = 8; 
     int squareSize; 
 
