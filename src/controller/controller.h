@@ -3,7 +3,9 @@
 #include "board/board.h"
 #include "view/board_widget.h"
 
-class Controller {
+class Controller: public QObject{
+    Q_OBJECT
+
 public:
     Controller(Board* board, BoardWidget* view)
     : board(board), view(view), currentPlayer(Colors::White), 

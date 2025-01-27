@@ -2,11 +2,10 @@
 #include "view/chess_window.h"
 
 int main(int argc, char *argv[]) {
-    QApplication app(argc, argv); // Inicializa o QApplication
-
+    QApplication app(argc, argv);
     ChessWindow window;
     window.setWindowTitle("Jogo de Xadrez");
     window.show();
 
-    return app.exec(); // Inicia o loop de eventos
+    return app.exec(); 
 }

@@ -2,6 +2,7 @@
 
 #include "board_widget.h"
 
+
 BoardWidget::BoardWidget(QWidget* parent)
     : QWidget(parent), squareSize(75){
     setMinimumSize(boardSize * squareSize, boardSize * squareSize); 
@@ -37,15 +38,28 @@ void BoardWidget::initImgMap(){
 
 }
 
-QSize BoardWidget::sizeHint() const{
-    return QSize(boardSize * squareSize, boardSize * squareSize);
-}
-
 void BoardWidget::paintEvent(QPaintEvent* event){
     QPainter painter(this);
+
     drawBoard(painter);
     drawPieces(painter);
+    drawHighlightedSquares(painter);
+
 }
+
+void BoardWidget::drawHighlightedSquares(QPainter& painter){
+    for (const auto& square : highlightedSquares){
+        int row = square.first.first;
+        int col = square.first.second;
+        QRect squareRect(col * squareSize, row * squareSize, squareSize, squareSize);
+
+        painter.setBrush(square.second); 
+        painter.setPen(Qt::NoPen);             
+        painter.drawRect(squareRect); 
+    }
+   highlightedSquares.clear(); 
+}
+
 
 void BoardWidget::drawBoard(QPainter& painter){
     for (int row = 0; row < boardSize; row++) {
@@ -84,11 +98,16 @@ void BoardWidget::drawPieces(QPainter& painter){
 }
 
 
+void BoardWidget::highlightSquare(int row, int col, const QColor& color){
+    highlightedSquares[std::make_pair(row, col)] = color; 
+    update();
+}
 
 void BoardWidget::mousePressEvent(QMouseEvent* event){
     int row = event->y() / squareSize;
     int col = event->x() / squareSize;
-    qDebug() << "Square clicked:" << row << col;
+    emit squareClicked(row, col);
+
 }
 
 BoardWidget::~BoardWidget() {}
