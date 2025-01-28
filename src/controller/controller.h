@@ -22,5 +22,6 @@ private:
     BoardWidget* view;      
     Colors currentPlayer;   
     int selectedX, selectedY; 
-    bool isSelectingPiece;  
+    bool isSelectingPiece;
+    std::pair<int, int> selectedSquare;
 };

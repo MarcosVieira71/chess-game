@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <memory>
 #include "pieces/base_piece.h"
 #include "pieces/pawn.h"
 #include "pieces/king.h"
@@ -19,7 +20,7 @@ public:
 
 
 private:
-    std::array<std::array<BasePiece*, 8>, 8> matrix;
+    std::array<std::array<std::unique_ptr<BasePiece>, 8>, 8> matrix;
 };
 
 

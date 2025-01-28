@@ -15,15 +15,30 @@ void Controller::initializeGame() {
 }
 
 void Controller::handleMouseClick(int row, int col) {
-    BasePiece* piece = board->getPieceAt(row, col);
-    QColor color;
-    if (piece && piece->getColor() == currentPlayer) {
-        isSelectingPiece = true;
-        color = QColor(0, 0, 255, 128);
-    } 
-    else {
+    if(isSelectingPiece){
+        int startX = selectedSquare.first; 
+        int startY = selectedSquare.second;
+        
+        bool moveSucceeded = board->movePiece(startX, startY, row, col);
+        if(moveSucceeded){
+            BasePiece* selectedPiece = board->getPieceAt(row, col);
+            view->updateSquares(row, col, selectedPiece);     
+            currentPlayer = currentPlayer == Colors::White ? Colors::Black : Colors::White;
+        }
         isSelectingPiece = false;
-        color = QColor(255, 0, 0, 128);
     }
-    view->highlightSquare(row, col, color);
+    else{
+        BasePiece* piece = board->getPieceAt(row, col);
+        QColor color;
+        if (piece && piece->getColor() == currentPlayer) {
+            isSelectingPiece = true;
+            color = QColor(0, 0, 255, 128);
+            selectedSquare = {row, col};
+        } 
+        else {
+            isSelectingPiece = false;
+            color = QColor(255, 0, 0, 128);
+        }
+        view->highlightSquare(row, col, color);
+    }
 }
