@@ -7,3 +7,6 @@ PieceType King::getType() const{
 bool King::isValidMovement(int startX, int endX, int startY, int endY){
 
 }
+
+bool King::canEliminate(int startX, int startY, int endX, int endY){
+}

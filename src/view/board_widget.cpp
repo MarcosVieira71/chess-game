@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <iostream> 
 
 #include "board_widget.h"
 
@@ -95,6 +96,14 @@ void BoardWidget::drawPieces(QPainter& painter){
         QPixmap scaledImg = imgPng.scaled(square.size(), Qt::KeepAspectRatio);
         painter.drawPixmap(square.topLeft(), scaledImg);
     }
+}
+
+void BoardWidget::removePiece(BasePiece* piece) {
+    auto it = squaresUpdate.find(piece);
+    if (it != squaresUpdate.end()) {
+        squaresUpdate.erase(it); 
+    }
+    delete piece;
 }
 
 

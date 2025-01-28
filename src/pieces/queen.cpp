@@ -7,3 +7,6 @@ PieceType Queen::getType() const{
 bool Queen::isValidMovement(int startX, int endX, int startY, int endY){
 
 }
+
+bool Queen::canEliminate(int startX, int startY, int endX, int endY){
+}

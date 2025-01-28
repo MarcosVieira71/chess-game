@@ -19,10 +19,14 @@ void Controller::handleMouseClick(int row, int col) {
         int startX = selectedSquare.first; 
         int startY = selectedSquare.second;
         
-        bool moveSucceeded = board->movePiece(startX, startY, row, col);
+        auto [moveSucceeded, pieceEliminated, eliminatedPiece] = board->movePiece(startX, startY, row, col);
         if(moveSucceeded){
             BasePiece* selectedPiece = board->getPieceAt(row, col);
+            if(pieceEliminated){
+                view->removePiece(eliminatedPiece);
+            }
             view->updateSquares(row, col, selectedPiece);     
+
             currentPlayer = currentPlayer == Colors::White ? Colors::Black : Colors::White;
         }
         isSelectingPiece = false;

@@ -19,6 +19,7 @@ public:
     explicit BoardWidget(QWidget* parent = nullptr);
     void updateSquares(int row, int col, BasePiece* piece);
     void highlightSquare(int row, int col, const QColor& color);
+    void removePiece(BasePiece* piece);
 
 
 protected:

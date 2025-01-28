@@ -2,6 +2,7 @@
 
 #include <array>
 #include <memory>
+#include <tuple>
 #include "pieces/base_piece.h"
 #include "pieces/pawn.h"
 #include "pieces/king.h"
@@ -16,7 +17,7 @@ public:
     BasePiece* getPieceAt(int row, int col);
     void clearBoard();
     void setupBoard();
-    bool movePiece(int startX, int startY, int endX, int endY);
+    std::tuple<bool,bool,BasePiece*> movePiece(int startX, int startY, int endX, int endY);
 
 
 private:
