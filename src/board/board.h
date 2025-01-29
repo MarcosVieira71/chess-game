@@ -23,6 +23,8 @@ public:
     std::tuple<bool,bool,std::shared_ptr<BasePiece>> movePiece(int startX, int startY, int endX, int endY);
 
 private:
+    std::tuple<bool, bool, std::shared_ptr<BasePiece>> movePawn(int startX, int startY, int endX, int endY);
+    std::vector<std::pair<int, int>> getValidMovesForPawn(int startX, int startY);
     std::array<std::array<std::shared_ptr<BasePiece>, 8>, 8> matrix;
 };
 

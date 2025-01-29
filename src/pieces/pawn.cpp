@@ -1,5 +1,6 @@
 #include "pawn.h"
-#include <stdio.h>
+#include <cmath>
+#include <iostream>
 
 PieceType Pawn::getType() const{
     return PieceType::Pawn;
@@ -23,5 +24,8 @@ void Pawn::updateFirstMove(void){
 
 
 bool Pawn::canEliminate(int startX, int startY, int endX, int endY, Colors targetColor){
+    if (abs(endY - startY) == 1 && endX == startX + direction && targetColor != color) {
+        return true;
+    }
     return false;
 }

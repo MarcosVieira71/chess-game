@@ -40,9 +40,15 @@ std::shared_ptr<BasePiece> Board::getPieceAt(int row, int col){
 // Retorna {movimento se foi bem-sucedido, se peça foi eliminada e a peça eliminada (ou nullptr)}
 std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, int startY, int endX, int endY) {
     std::shared_ptr<BasePiece> selectedPiece = getPieceAt(startX, startY);
+
+    if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(selectedPiece)) {
+        return movePawn(startX, startY, endX, endY);
+    }
+
     if ((endX == startX && endY == startY) || !selectedPiece->isValidMovement(startX, startY, endX, endY)){
         return {false, false, nullptr};
     }
+
 
     auto target = matrix[endX][endY];
     std::shared_ptr<BasePiece> eliminatedPiece = nullptr;
@@ -53,10 +59,6 @@ std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, 
         wasPieceEliminated = true;
     } else if (target) {
         return {false, false, nullptr};
-    }
-
-    if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(selectedPiece)) {
-        pawnPiece->updateFirstMove();
     }
 
     matrix[endX][endY] = std::move(matrix[startX][startY]);
@@ -83,4 +85,37 @@ std::vector<std::pair<int, int>> Board::getValidMoves(int startX, int startY){
     }
 
     return validMoves;
+}
+
+
+std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePawn(int startX, int startY, int endX, int endY) {
+    std::shared_ptr<Pawn> pawnPiece = std::dynamic_pointer_cast<Pawn>(getPieceAt(startX, startY));
+    
+    if (endX == startX && endY == startY){
+        return {false, false, nullptr};
+    }
+
+    auto target = matrix[endX][endY];
+    std::shared_ptr<BasePiece> eliminatedPiece = nullptr;
+    bool wasPieceEliminated = false;
+    bool wasMoved = false; 
+
+    if (target && pawnPiece->canEliminate(startX, startY, endX, endY, target->getColor())){
+        eliminatedPiece = std::move(target);
+        wasPieceEliminated = true;
+    } else if (target) {
+        return {false, false, nullptr};
+    }
+
+    if(pawnPiece->isValidMovement(startX, startY, endX, endY) || wasPieceEliminated){
+        matrix[endX][endY] = std::move(matrix[startX][startY]);
+        wasMoved = true;
+        pawnPiece->updateFirstMove();
+    }
+    return {wasMoved, wasPieceEliminated, eliminatedPiece};
+
+}
+
+std::vector<std::pair<int, int>> Board::getValidMovesForPawn(int startX, int startY){
+    //TODO
 }

@@ -30,16 +30,18 @@ void Controller::handleMouseClick(int row, int col) {
         return;
     }
 
+    auto redColor =  QColor(255, 0, 0, 128);
+    auto blueColor = QColor(0, 0, 255, 128);
     if (piece && piece->getColor() == currentPlayer) {
         isSelectingPiece = true;
         selectedSquare = {row, col};
-        view->highlightSquare(row, col, QColor(0, 0, 255, 128));
+        view->highlightSquare(row, col, blueColor);
         for (const auto& move : board->getValidMoves(row, col)) {
             auto target = board->getPieceAt(move.first, move.second);
-            QColor highlightColor = (!target) ? QColor(0, 255, 0, 128) : QColor(255, 0, 0, 128);
+            QColor highlightColor = (!target) ? blueColor : redColor;
             view->highlightSquare(move.first, move.second, highlightColor); 
         }
         return;
     } 
-    view->highlightSquare(row, col, QColor(255, 0, 0, 128));
+    view->highlightSquare(row, col, redColor);
 }
