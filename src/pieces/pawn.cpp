@@ -11,13 +11,17 @@ bool Pawn::isValidMovement(int startX, int startY, int endX, int endY) {
     }
     
     if (endY == startY && endX == startX + direction * 2 && isFirstMove){
-        isFirstMove = false;
         return true;
     }
     
     return false;
 }
 
+void Pawn::updateFirstMove(void){
+    isFirstMove = false;
+}
+
+
 bool Pawn::canEliminate(int startX, int startY, int endX, int endY, Colors targetColor){
-    return true;
+    return false;
 }

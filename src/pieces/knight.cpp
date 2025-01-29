@@ -5,7 +5,7 @@ PieceType Knight::getType() const{
     return PieceType::Knight;
 }
 
-bool Knight::isValidMovement(int startX, int startY, int endX, int endY) {
+bool Knight::isValidMovement(int startX, int startY, int endX, int endY) {    
     int deltaX = abs(endX - startX);
     int deltaY = abs(endY - startY);
     

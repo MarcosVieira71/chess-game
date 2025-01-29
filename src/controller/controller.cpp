@@ -15,34 +15,31 @@ void Controller::initializeGame() {
 }
 
 void Controller::handleMouseClick(int row, int col) {
-    if(isSelectingPiece){
-        int startX = selectedSquare.first; 
-        int startY = selectedSquare.second;
-        
-        auto [moveSucceeded, pieceEliminated, eliminatedPiece] = board->movePiece(startX, startY, row, col);
-        if(moveSucceeded){
-            std::shared_ptr<BasePiece> selectedPiece = board->getPieceAt(row, col);
-            if(pieceEliminated){
-                view->removePiece(eliminatedPiece);
-            }
-            view->updateSquares(row, col, selectedPiece);     
+    auto piece = board->getPieceAt(row, col);
 
-            currentPlayer = currentPlayer == Colors::White ? Colors::Black : Colors::White;
+    if (isSelectingPiece) {
+        auto [moveSucceeded, pieceEliminated, eliminatedPiece] = board->movePiece(selectedSquare.first, selectedSquare.second, row, col);
+        
+        if (moveSucceeded) {
+            if (pieceEliminated) view->removePiece(eliminatedPiece);
+            view->updateSquares(row, col, board->getPieceAt(row, col));
+            currentPlayer = (currentPlayer == Colors::White) ? Colors::Black : Colors::White;
         }
+
         isSelectingPiece = false;
+        return;
     }
-    else{
-        std::shared_ptr<BasePiece> piece = board->getPieceAt(row, col);
-        QColor color;
-        if (piece && piece->getColor() == currentPlayer) {
-            isSelectingPiece = true;
-            color = QColor(0, 0, 255, 128);
-            selectedSquare = {row, col};
-        } 
-        else {
-            isSelectingPiece = false;
-            color = QColor(255, 0, 0, 128);
+
+    if (piece && piece->getColor() == currentPlayer) {
+        isSelectingPiece = true;
+        selectedSquare = {row, col};
+        view->highlightSquare(row, col, QColor(0, 0, 255, 128));
+        for (const auto& move : board->getValidMoves(row, col)) {
+            auto target = board->getPieceAt(move.first, move.second);
+            QColor highlightColor = (!target) ? QColor(0, 255, 0, 128) : QColor(255, 0, 0, 128);
+            view->highlightSquare(move.first, move.second, highlightColor); 
         }
-        view->highlightSquare(row, col, color);
-    }
+        return;
+    } 
+    view->highlightSquare(row, col, QColor(255, 0, 0, 128));
 }

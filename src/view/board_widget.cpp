@@ -45,7 +45,7 @@ void BoardWidget::paintEvent(QPaintEvent* event){
     drawBoard(painter);
     drawPieces(painter);
     drawHighlightedSquares(painter);
-
+    highlightedSquares.clear(); 
 }
 
 void BoardWidget::drawHighlightedSquares(QPainter& painter){
@@ -58,7 +58,6 @@ void BoardWidget::drawHighlightedSquares(QPainter& painter){
         painter.setPen(Qt::NoPen);             
         painter.drawRect(squareRect); 
     }
-   highlightedSquares.clear(); 
 }
 
 

@@ -39,29 +39,48 @@ std::shared_ptr<BasePiece> Board::getPieceAt(int row, int col){
 
 // Retorna {movimento se foi bem-sucedido, se peça foi eliminada e a peça eliminada (ou nullptr)}
 std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, int startY, int endX, int endY) {
-    if (endX == startX && endY == startY) {
-        return {false, false, nullptr};
-    }
-
     std::shared_ptr<BasePiece> selectedPiece = getPieceAt(startX, startY);
-
-    if (!selectedPiece->isValidMovement(startX, startY, endX, endY)){
+    if ((endX == startX && endY == startY) || !selectedPiece->isValidMovement(startX, startY, endX, endY)){
         return {false, false, nullptr};
     }
 
-    std::shared_ptr<BasePiece> eliminatedPiece;
-    bool wasPieceEliminated = false;
     auto target = matrix[endX][endY];
-    if(target){
-        if (selectedPiece->canEliminate(startX, startY, endX, endY, target->getColor())) {
-            eliminatedPiece = target;
-            wasPieceEliminated = true;
-            matrix[endX][endY] = std::move(matrix[startX][startY]);
-            return {true, wasPieceEliminated, eliminatedPiece};
-        }
+    std::shared_ptr<BasePiece> eliminatedPiece = nullptr;
+    bool wasPieceEliminated = false;
+
+    if (target && selectedPiece->canEliminate(startX, startY, endX, endY, target->getColor())) {
+        eliminatedPiece = std::move(target);
+        wasPieceEliminated = true;
+    } else if (target) {
         return {false, false, nullptr};
     }
-    
+
+    if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(selectedPiece)) {
+        pawnPiece->updateFirstMove();
+    }
+
     matrix[endX][endY] = std::move(matrix[startX][startY]);
-    return {true, wasPieceEliminated, nullptr};
+    return {true, wasPieceEliminated, eliminatedPiece};
+}
+
+std::vector<std::pair<int, int>> Board::getValidMoves(int startX, int startY){
+    std::vector<std::pair<int, int>> validMoves;
+    std::shared_ptr<BasePiece> piece = getPieceAt(startX, startY);
+
+    if (!piece) return validMoves;
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            if (piece->isValidMovement(startX, startY, row, col)){
+                auto target = matrix[row][col];
+                if(!target){
+                    validMoves.emplace_back(row, col);
+                }
+                else if(target->getColor() != piece->getColor()){
+                    validMoves.emplace_back(row, col);
+                }
+            }
+        }
+    }
+
+    return validMoves;
 }
