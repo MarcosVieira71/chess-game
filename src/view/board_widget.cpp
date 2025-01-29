@@ -72,16 +72,18 @@ void BoardWidget::drawBoard(QPainter& painter){
     }
 }
 
-void BoardWidget::updateSquares(int row, int col, BasePiece* piece){
+void BoardWidget::updateSquares(int row, int col, std::shared_ptr<BasePiece> piece){
     auto pos = std::make_pair(row, col);
-    squaresUpdate[piece] = pos;
+
+    std::weak_ptr<BasePiece> weakPiece = piece; 
+    squaresUpdate[weakPiece] = pos;
     update();
 }
 
 
 void BoardWidget::drawPieces(QPainter& painter){
     for(auto squares: squaresUpdate){
-        auto piece = squares.first;
+        auto piece = squares.first.lock();
         auto position = squares.second;
         auto row = position.first;
         auto col = position.second;
@@ -98,12 +100,11 @@ void BoardWidget::drawPieces(QPainter& painter){
     }
 }
 
-void BoardWidget::removePiece(BasePiece* piece) {
+void BoardWidget::removePiece(std::shared_ptr<BasePiece> piece) {
     auto it = squaresUpdate.find(piece);
     if (it != squaresUpdate.end()) {
         squaresUpdate.erase(it); 
     }
-    delete piece;
 }
 
 

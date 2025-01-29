@@ -17,9 +17,9 @@ class BoardWidget : public QWidget {
 public:
     virtual ~BoardWidget(); 
     explicit BoardWidget(QWidget* parent = nullptr);
-    void updateSquares(int row, int col, BasePiece* piece);
+    void updateSquares(int row, int col, std::shared_ptr<BasePiece> piece);
     void highlightSquare(int row, int col, const QColor& color);
-    void removePiece(BasePiece* piece);
+    void removePiece(std::shared_ptr<BasePiece> piece);
 
 
 protected:
@@ -33,7 +33,7 @@ private:
     void drawHighlightedSquares(QPainter& painter);
 
 
-    std::map<BasePiece*, std::pair<int, int>> squaresUpdate;
+    std::map<std::weak_ptr<BasePiece>, std::pair<int, int>, std::owner_less<std::weak_ptr<BasePiece>>> squaresUpdate;
     std::map<Colors, std::map<PieceType, std::string>> piecesImages; 
     std::map<std::pair<int, int>, QColor> highlightedSquares;
     static constexpr int boardSize = 8; 

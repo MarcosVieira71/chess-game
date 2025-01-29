@@ -7,7 +7,7 @@ void Controller::initializeGame() {
     board->setupBoard();
     for(int row = 0; row < 8; row++){
         for(int col = 0; col < 8; col++){
-            BasePiece* piece = board->getPieceAt(row, col);
+            std::shared_ptr<BasePiece> piece = board->getPieceAt(row, col);
             if(piece) view->updateSquares(row, col, piece);
         }
     }
@@ -21,7 +21,7 @@ void Controller::handleMouseClick(int row, int col) {
         
         auto [moveSucceeded, pieceEliminated, eliminatedPiece] = board->movePiece(startX, startY, row, col);
         if(moveSucceeded){
-            BasePiece* selectedPiece = board->getPieceAt(row, col);
+            std::shared_ptr<BasePiece> selectedPiece = board->getPieceAt(row, col);
             if(pieceEliminated){
                 view->removePiece(eliminatedPiece);
             }
@@ -32,7 +32,7 @@ void Controller::handleMouseClick(int row, int col) {
         isSelectingPiece = false;
     }
     else{
-        BasePiece* piece = board->getPieceAt(row, col);
+        std::shared_ptr<BasePiece> piece = board->getPieceAt(row, col);
         QColor color;
         if (piece && piece->getColor() == currentPlayer) {
             isSelectingPiece = true;

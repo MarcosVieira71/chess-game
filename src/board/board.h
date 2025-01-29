@@ -14,14 +14,14 @@
 class Board
 {
 public:
-    BasePiece* getPieceAt(int row, int col);
+    std::shared_ptr<BasePiece> getPieceAt(int row, int col);
     void clearBoard();
     void setupBoard();
-    std::tuple<bool,bool,BasePiece*> movePiece(int startX, int startY, int endX, int endY);
+    std::tuple<bool,bool,std::shared_ptr<BasePiece>> movePiece(int startX, int startY, int endX, int endY);
 
 
 private:
-    std::array<std::array<std::unique_ptr<BasePiece>, 8>, 8> matrix;
+    std::array<std::array<std::shared_ptr<BasePiece>, 8>, 8> matrix;
 };
 
 
