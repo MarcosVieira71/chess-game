@@ -6,7 +6,6 @@ PieceType Pawn::getType() const{
 };
         
 bool Pawn::isValidMovement(int startX, int startY, int endX, int endY) {
-    int direction = (color == Colors::White) ? 1 : -1; 
     if (endY == startY && endX == startX + direction) {
         return true;
     }

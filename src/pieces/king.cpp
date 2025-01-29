@@ -6,8 +6,6 @@ PieceType King::getType() const{
 }
 
 bool King::isValidMovement(int startX, int startY, int endX, int endY){
-    int direction = (color == Colors::White) ? 1 : -1; 
-
     if(endY == startY){
         return startX + direction == endX || startX - direction == endX;
     }

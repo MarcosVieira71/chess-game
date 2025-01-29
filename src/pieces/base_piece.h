@@ -27,4 +27,5 @@ class BasePiece{
 
     protected:
         Colors color;
+        int direction = (color == Colors::White) ? 1 : -1; 
 };
