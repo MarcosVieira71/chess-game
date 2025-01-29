@@ -6,23 +6,7 @@ PieceType King::getType() const{
 }
 
 bool King::isValidMovement(int startX, int startY, int endX, int endY){
-    if(endY == startY){
-        return startX + direction == endX || startX - direction == endX;
-    }
-    
-    if(endX == startX){
-        return startY + direction == endY || startY - direction == endY;
-    }
-
-    if(startY + direction == endY){
-        return startX + direction == endX || startX - direction == endX;
-    }
-
-    if(startY - direction == endY){
-        return startX + direction == endX || startX - direction == endX;
-    }
-    
-    return false;
+    return abs(endX - startX) <= 1 && abs(endY - startY) <= 1;
 }
 
 bool King::canEliminate(int startX, int startY, int endX, int endY, Colors targetColor){
