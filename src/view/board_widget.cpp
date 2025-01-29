@@ -11,33 +11,36 @@ BoardWidget::BoardWidget(QWidget* parent)
     
 }
 
-void BoardWidget::initImgMap(){
-    
+void BoardWidget::initImgMap() {
     std::array<PieceType, 6> piecesTypes = {
         PieceType::King,  PieceType::Knight,
         PieceType::Queen, PieceType::Bishop,
-        PieceType::Pawn,  PieceType::Rook,
+        PieceType::Pawn,  PieceType::Rook
     };
 
     std::array<Colors, 2> colors = {Colors::White, Colors::Black};
     std::array<std::string, 6> pieceNames = {"king", "knight", "queen", "bishop", "pawn", "rook"};
-    
+
     std::string basePath = "src/pieces/assets/";
-    for(int i = 0; i < 2; i++){
-        
-        std::string colorPath = i == 0 ? "white/white-" : "black/black-";
-        std::map<PieceType, std::string> coloredPiecesImgMap;
-        
-        for(int j = 0; j < 6; j++){
-            std::string pieceName = pieceNames[j];
-            auto imgPath = basePath + colorPath + pieceName + ".png";    
-            coloredPiecesImgMap[piecesTypes[j]] = imgPath;
+
+    for (int i = 0; i < 2; i++) {
+        std::string colorPath = (i == 0) ? "white/white-" : "black/black-";
+        std::map<PieceType, QPixmap> coloredPiecesImgMap;
+
+        for (int j = 0; j < 6; j++) {
+            std::string imgPath = basePath + colorPath + pieceNames[j] + ".png";
+
+            QPixmap imgPng(QString::fromStdString(imgPath));
+
+            QPixmap scaledImg = imgPng.scaled(squareSize, squareSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+            coloredPiecesImgMap[piecesTypes[j]] = scaledImg;
         }
 
         piecesImages[colors[i]] = coloredPiecesImgMap;
     }
-
 }
+
 
 void BoardWidget::paintEvent(QPaintEvent* event){
     QPainter painter(this);
@@ -90,11 +93,9 @@ void BoardWidget::drawPieces(QPainter& painter){
         
         auto color = piece->getColor();
         auto type = piece->getType();
-        auto mapColor = piecesImages[color];
-        auto imgPath = mapColor[type];
-        QPixmap imgPng(QString::fromStdString(imgPath)); 
-        
-        QPixmap scaledImg = imgPng.scaled(square.size(), Qt::KeepAspectRatio);
+        auto imgMap = piecesImages[color];
+        auto scaledImg = imgMap[type];
+
         painter.drawPixmap(square.topLeft(), scaledImg);
     }
 }

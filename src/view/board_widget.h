@@ -34,7 +34,7 @@ private:
 
 
     std::map<std::weak_ptr<BasePiece>, std::pair<int, int>, std::owner_less<std::weak_ptr<BasePiece>>> squaresUpdate;
-    std::map<Colors, std::map<PieceType, std::string>> piecesImages; 
+    std::map<Colors, std::map<PieceType, QPixmap>> piecesImages; 
     std::map<std::pair<int, int>, QColor> highlightedSquares;
     static constexpr int boardSize = 8; 
     int squareSize; 
