@@ -37,34 +37,31 @@ std::shared_ptr<BasePiece> Board::getPieceAt(int row, int col){
 
 
 
-// Retorna {movimento bem-sucedido, peça eliminada (ou nullptr)}
+// Retorna {movimento se foi bem-sucedido, se peça foi eliminada e a peça eliminada (ou nullptr)}
 std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, int startY, int endX, int endY) {
     if (endX == startX && endY == startY) {
         return {false, false, nullptr};
     }
 
     std::shared_ptr<BasePiece> selectedPiece = getPieceAt(startX, startY);
-    if (!selectedPiece) {
+
+    if (!selectedPiece->isValidMovement(startX, startY, endX, endY)){
         return {false, false, nullptr};
     }
 
     std::shared_ptr<BasePiece> eliminatedPiece;
     bool wasPieceEliminated = false;
-    auto pos = matrix[endX][endY];
-    if (pos && pos->getColor() != selectedPiece->getColor()){
-        if (selectedPiece->canEliminate(startX, startY, endX, endY)) {
-            eliminatedPiece = matrix[endX][endY];
+    auto target = matrix[endX][endY];
+    if(target){
+        if (selectedPiece->canEliminate(startX, startY, endX, endY, target->getColor())) {
+            eliminatedPiece = target;
             wasPieceEliminated = true;
             matrix[endX][endY] = std::move(matrix[startX][startY]);
             return {true, wasPieceEliminated, eliminatedPiece};
         }
         return {false, false, nullptr};
     }
-
-    if (!selectedPiece->isValidMovement(startX, startY, endX, endY)) {
-        return {false, false, nullptr};
-    }
-
+    
     matrix[endX][endY] = std::move(matrix[startX][startY]);
     return {true, wasPieceEliminated, nullptr};
 }
