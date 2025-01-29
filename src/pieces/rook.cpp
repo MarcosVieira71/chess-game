@@ -5,12 +5,8 @@ PieceType Rook::getType() const{
 }
 
 bool Rook::isValidMovement(int startX, int startY, int endX, int endY){
-    if (endY == startY){
-        return startX + direction * 7 <= endX || startX - direction * 7 <= endX;
-    }
-    if (endX == startX){
-        return startY + direction * 7 <= endY || startY - direction * 7 <= endY;
-    }
+    return startX == endX || startY == endY;
+
 }
 
 bool Rook::canEliminate(int startX, int startY, int endX, int endY, Colors targetColor){
