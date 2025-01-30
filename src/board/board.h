@@ -25,6 +25,8 @@ public:
 private:
     std::tuple<bool, bool, std::shared_ptr<BasePiece>> movePawn(int startX, int startY, int endX, int endY);
     std::vector<std::pair<int, int>> getValidMovesForPawn(std::shared_ptr<Pawn> piece, int startX, int startY);
+    bool isPathClear(int startX, int startY, int endX, int endY);
+    
     std::array<std::array<std::shared_ptr<BasePiece>, 8>, 8> matrix;
 };
 

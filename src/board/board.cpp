@@ -49,20 +49,21 @@ std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, 
         return {false, false, nullptr};
     }
 
-
     auto target = matrix[endX][endY];
     std::shared_ptr<BasePiece> eliminatedPiece = nullptr;
     bool wasPieceEliminated = false;
-
-    if (target && selectedPiece->canEliminate(startX, startY, endX, endY, target->getColor())) {
-        eliminatedPiece = std::move(target);
-        wasPieceEliminated = true;
-    } else if (target) {
-        return {false, false, nullptr};
+    bool wasMoved = false;
+    if(isPathClear(startX, startY, endX, endY)){
+        if (target && selectedPiece->canEliminate(startX, startY, endX, endY, target->getColor())) {
+            eliminatedPiece = std::move(target);
+            wasPieceEliminated = true;
+        } else if (target) { //Caso da peça target ser da mesma cor da peça selecionada
+            return {false, false, nullptr};
+        }
+        matrix[endX][endY] = std::move(matrix[startX][startY]); 
+        wasMoved = true;
     }
-
-    matrix[endX][endY] = std::move(matrix[startX][startY]);
-    return {true, wasPieceEliminated, eliminatedPiece};
+    return {wasMoved, wasPieceEliminated, eliminatedPiece};
 }
 
 std::vector<std::pair<int, int>> Board::getValidMoves(int startX, int startY){
@@ -77,12 +78,12 @@ std::vector<std::pair<int, int>> Board::getValidMoves(int startX, int startY){
 
     for (int row = 0; row < 8; row++) {
         for (int col = 0; col < 8; col++) {
-            if (piece->isValidMovement(startX, startY, row, col)){
+            if (piece->isValidMovement(startX, startY, row, col) && isPathClear(startX, startY, row, col)){
                 auto target = matrix[row][col];
                 if(!target){
                     validMoves.emplace_back(row, col);
                 }
-                else if(target->getColor() != piece->getColor()){
+                else if(target->getColor() != piece->getColor() && isPathClear(startX, startY, row, col)){
                     validMoves.emplace_back(row, col);
                 }
             }
@@ -112,7 +113,7 @@ std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePawn(int startX, i
         return {false, false, nullptr};
     }
 
-    if(pawnPiece->isValidMovement(startX, startY, endX, endY) || wasPieceEliminated){
+    if((pawnPiece->isValidMovement(startX, startY, endX, endY) || wasPieceEliminated) && isPathClear(startX, startY, endX, endY)){
         matrix[endX][endY] = std::move(matrix[startX][startY]);
         wasMoved = true;
         pawnPiece->updateFirstMove();
@@ -127,7 +128,7 @@ std::vector<std::pair<int, int>> Board::getValidMovesForPawn(std::shared_ptr<Paw
         for (int col = 0; col < 8; col++) {
             auto target = matrix[row][col];
             if(!target){
-                if(piece->isValidMovement(startX, startY, row, col)){
+                if(piece->isValidMovement(startX, startY, row, col) && isPathClear(startX, startY, row, col)){
                     validMoves.emplace_back(row, col);
                 }
             }
@@ -137,4 +138,25 @@ std::vector<std::pair<int, int>> Board::getValidMovesForPawn(std::shared_ptr<Paw
         }
     }
     return validMoves;
+}
+
+bool Board::isPathClear(int startX, int startY, int endX, int endY){
+    int deltaX = endX - startX;
+    int deltaY = endY - startY;
+
+    int stepX = (deltaX == 0) ? 0 : (deltaX > 0 ? 1 : -1);
+    int stepY = (deltaY == 0) ? 0 : (deltaY > 0 ? 1 : -1);
+
+    int x = startX + stepX;
+    int y = startY + stepY;
+
+    while (x != endX || y != endY) {
+        if (matrix[x][y] != nullptr) { 
+            return false;     
+        }
+        x += stepX;
+        y += stepY;
+    }
+
+    return true; 
 }
