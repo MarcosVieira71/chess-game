@@ -66,10 +66,15 @@ std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, 
 }
 
 std::vector<std::pair<int, int>> Board::getValidMoves(int startX, int startY){
-    std::vector<std::pair<int, int>> validMoves;
     std::shared_ptr<BasePiece> piece = getPieceAt(startX, startY);
+    std::vector<std::pair<int, int>> validMoves;
 
     if (!piece) return validMoves;
+
+    if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(piece)) {
+        return getValidMovesForPawn(pawnPiece, startX, startY);
+    }
+
     for (int row = 0; row < 8; row++) {
         for (int col = 0; col < 8; col++) {
             if (piece->isValidMovement(startX, startY, row, col)){
@@ -116,6 +121,20 @@ std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePawn(int startX, i
 
 }
 
-std::vector<std::pair<int, int>> Board::getValidMovesForPawn(int startX, int startY){
-    //TODO
+std::vector<std::pair<int, int>> Board::getValidMovesForPawn(std::shared_ptr<Pawn> piece, int startX, int startY){
+    std::vector<std::pair<int, int>> validMoves;
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            auto target = matrix[row][col];
+            if(!target){
+                if(piece->isValidMovement(startX, startY, row, col)){
+                    validMoves.emplace_back(row, col);
+                }
+            }
+            else if(piece->canEliminate(startX, startY, row, col, target->getColor())){ 
+                validMoves.emplace_back(row, col);
+            }
+        }
+    }
+    return validMoves;
 }
