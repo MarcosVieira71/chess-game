@@ -41,6 +41,10 @@ std::shared_ptr<BasePiece> Board::getPieceAt(int row, int col){
 std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, int startY, int endX, int endY) {
     std::shared_ptr<BasePiece> selectedPiece = getPieceAt(startX, startY);
 
+    if(willMoveCauseACheck(startX, startY, endX, endY)){
+        return {false, false, nullptr};
+    }
+
     if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(selectedPiece)) {
         return movePawn(startX, startY, endX, endY);
     }
@@ -160,4 +164,48 @@ bool Board::isPathClear(int startX, int startY, int endX, int endY){
     }
 
     return true; 
+}
+
+bool Board::isInCheck(Colors kingColor) {
+    std::pair<int, int> kingPos = findKingPos(kingColor);
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            auto target = matrix[row][col];
+            if (target && target->getColor() != kingColor && target->canEliminate(row, col, kingPos.first, kingPos.second, kingColor)) {
+                if (isPathClear(row, col, kingPos.first, kingPos.second)) {
+                    return true; 
+                }
+            }
+        }
+    }
+    return false; 
+}
+
+bool Board::willMoveCauseACheck(int startX, int startY, int endX, int endY) {
+    auto selectedPiece = matrix[startX][startY];
+    auto target = matrix[endX][endY];
+    
+    matrix[endX][endY] = selectedPiece;
+    matrix[startX][startY] = nullptr;
+    
+    bool check = isInCheck(selectedPiece->getColor());
+
+    matrix[startX][startY] = selectedPiece;
+    matrix[endX][endY] = target;
+
+    return check;
+}
+
+std::pair<int, int>Board::findKingPos(Colors kingColor){
+    std::pair<int, int> kingPos;
+    for (int row = 0; row < 8; row++) {
+        for (int col = 0; col < 8; col++) {
+            auto piece = matrix[row][col];
+            if (piece && piece->getColor() == kingColor && std::dynamic_pointer_cast<King>(piece)) {
+                kingPos = std::make_pair(row, col);
+                return kingPos;
+            }
+        }
+    }
+    return std::make_pair(-1, -1);
 }

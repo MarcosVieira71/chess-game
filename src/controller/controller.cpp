@@ -43,6 +43,7 @@ void Controller::attemptMovement(int row, int col){
         if (pieceEliminated) view->removePiece(eliminatedPiece);
         view->updateSquares(row, col, board->getPieceAt(row, col));
         nextTurn();
+        board->isInCheck(currentPlayer);
     }
     isSelectingPiece = false;
     return;
@@ -56,6 +57,9 @@ void Controller::highlightValidMoves(int row, int col){
     for (const auto& move : board->getValidMoves(row, col)) {
         auto target = board->getPieceAt(move.first, move.second);
         QColor highlightColor = (!target) ? blueColor : redColor;
+        if(board->willMoveCauseACheck(row, col, move.first, move.second)){
+            highlightColor = redColor;
+        }
         view->highlightSquare(move.first, move.second, highlightColor); 
     }
 }
