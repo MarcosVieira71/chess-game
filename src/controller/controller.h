@@ -12,13 +12,20 @@ public:
       selectedX(-1), selectedY(-1), isSelectingPiece(false) {
         initializeGame();
     };
+private:
 
     void initializeGame();
+    void showPieces();
     void handleMouseClick(int x, int y);
+    void attemptMovement(int row, int col);
+    void highlightValidMoves(int row, int col);
+    void selectBoardSquare(int row, int col);
     void nextTurn();
 
 private:
     Board* board;           
+    const QColor blueColor = QColor(0, 0, 255, 128);
+    const QColor redColor = QColor(255, 0, 0, 128);
     BoardWidget* view;      
     Colors currentPlayer;   
     int selectedX, selectedY; 
