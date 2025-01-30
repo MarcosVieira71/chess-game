@@ -209,3 +209,50 @@ std::pair<int, int>Board::findKingPos(Colors kingColor){
     }
     return std::make_pair(-1, -1);
 }
+
+bool Board::isCheckMate(Colors kingColor){
+    if(!isInCheck(kingColor)){
+        return false;
+    }
+
+    bool kingHasMoves = doesKingHaveMoves(kingColor);
+    bool undoCheck = canUndoCheck(kingColor);
+
+    return !kingHasMoves && !undoCheck;
+}
+
+bool Board::doesKingHaveMoves(Colors kingColor){
+    auto kingPos = findKingPos(kingColor);
+    auto validMoves = getValidMoves(kingPos.first, kingPos.second);
+    for (const auto& move : validMoves) {
+        if (!willMoveCauseACheck(kingPos.first, kingPos.second, move.first, move.second)) {
+            return true; 
+        }
+    }
+    return false;
+}
+
+bool Board::canUndoCheck(Colors kingColor){
+    for(int row = 0; row < 8; row++){
+        for(int col = 0; col < 8; col++){
+            auto piece = matrix[row][col];
+            if(piece && piece->getColor() == kingColor){
+                auto validMoves = getValidMoves(row, col);
+                for (const auto& move : validMoves) {
+                    if (!willMoveCauseACheck(row, col, move.first, move.second)) {
+                        return true; 
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+
+// //O REI não está em cheque e também nenhuma de suas peças tem moviemntos válidos
+// bool Board::isStaleMate(Colors kingColor){
+//     if(!isInCheck(kingColor)){
+
+//     }
+// }

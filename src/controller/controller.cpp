@@ -42,8 +42,10 @@ void Controller::attemptMovement(int row, int col){
     if (moveSucceeded) {
         if (pieceEliminated) view->removePiece(eliminatedPiece);
         view->updateSquares(row, col, board->getPieceAt(row, col));
-        nextTurn();
-        board->isInCheck(currentPlayer);
+        nextTurn(); 
+        if(board->isCheckMate(currentPlayer)){
+            printf("cabou-se\n");
+        };
     }
     isSelectingPiece = false;
     return;

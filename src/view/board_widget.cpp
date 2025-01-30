@@ -68,7 +68,7 @@ void BoardWidget::drawBoard(QPainter& painter){
     for (int row = 0; row < boardSize; row++) {
         for (int col = 0; col < boardSize; col++) {
             QRect square(col * squareSize, row * squareSize, squareSize, squareSize);
-            painter.setBrush((row + col) % 2 == 0 ? Qt::white : Qt::black);
+            painter.setBrush((row + col) % 2 == 0 ? Qt::white : Qt::gray);
             painter.drawRect(square);
         }
     }

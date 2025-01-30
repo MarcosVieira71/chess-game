@@ -21,6 +21,7 @@ private:
     void highlightValidMoves(int row, int col);
     void selectBoardSquare(int row, int col);
     void nextTurn();
+    void gameOver();
 
 private:
     Board* board;           
