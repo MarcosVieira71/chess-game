@@ -22,6 +22,7 @@ class BasePiece{
         Colors getColor(){return color;}
         virtual ~BasePiece() {};
         virtual PieceType getType() const = 0;
+        virtual bool canJump(){return false;}
         virtual bool isValidMovement(int startX, int endX, int startY, int endY) = 0;
         virtual bool canEliminate(int startX, int startY, int endX, int endY, Colors targetColor) = 0;
 

@@ -15,3 +15,7 @@ bool Knight::isValidMovement(int startX, int startY, int endX, int endY) {
 bool Knight::canEliminate(int startX, int startY, int endX, int endY, Colors targetColor) {
     return isValidMovement(startX, startY, endX, endY) && targetColor != this->color;
 }
+
+bool Knight::canJump(){
+    return true;
+}

@@ -141,6 +141,8 @@ std::vector<std::pair<int, int>> Board::getValidMovesForPawn(std::shared_ptr<Paw
 }
 
 bool Board::isPathClear(int startX, int startY, int endX, int endY){
+    if(getPieceAt(startX, startY)->canJump()) return true;
+    
     int deltaX = endX - startX;
     int deltaY = endY - startY;
 
