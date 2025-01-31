@@ -39,33 +39,36 @@ std::shared_ptr<BasePiece> Board::getPieceAt(int row, int col){
 
 // Retorna {movimento se foi bem-sucedido, se peça foi eliminada e a peça eliminada (ou nullptr)}
 std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, int startY, int endX, int endY) {
+    
+    //Caso 1: Posicao inicial e final ser igual:
+    if (endX == startX && endY == startY) return {false, false, nullptr};
+    
+    //Caso 2: movimento vai causar um cheque para a cor da peça movida
+    if(willMoveCauseACheck(startX, startY, endX, endY)) return {false, false, nullptr};
+    
+    //Caso 3: O caminho não está livre para o movimento
+    if (!isPathClear(startX, startY, endX, endY)) return {false, false, nullptr};
+    
+
     std::shared_ptr<BasePiece> selectedPiece = getPieceAt(startX, startY);
-
-    if(willMoveCauseACheck(startX, startY, endX, endY)){
-        return {false, false, nullptr};
-    }
-
-    if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(selectedPiece)) {
-        return movePawn(startX, startY, endX, endY);
-    }
-
-    if ((endX == startX && endY == startY) || !selectedPiece->isValidMovement(startX, startY, endX, endY)){
-        return {false, false, nullptr};
-    }
 
     auto target = matrix[endX][endY];
     std::shared_ptr<BasePiece> eliminatedPiece = nullptr;
     bool wasPieceEliminated = false;
-    bool wasMoved = false;
-    if(isPathClear(startX, startY, endX, endY)){
-        if (target && selectedPiece->canEliminate(startX, startY, endX, endY, target->getColor())) {
-            eliminatedPiece = std::move(target);
-            wasPieceEliminated = true;
-        } else if (target) { //Caso da peça target ser da mesma cor da peça selecionada
-            return {false, false, nullptr};
-        }
-        matrix[endX][endY] = std::move(matrix[startX][startY]); 
+    bool wasMoved = false; 
+
+    if (target && selectedPiece->canEliminate(startX, startY, endX, endY, target->getColor())) {
+        eliminatedPiece = std::move(target);
+        wasPieceEliminated = true;
+    } else if (target) { //Caso da peça target ser da mesma cor da peça selecionada
+        return {false, false, nullptr};
+    }
+    if((selectedPiece->isValidMovement(startX, startY, endX, endY) || wasPieceEliminated)){
+        matrix[endX][endY] = std::move(matrix[startX][startY]);
         wasMoved = true;
+        if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(selectedPiece)) {
+            pawnPiece->updateFirstMove();
+        }
     }
     return {wasMoved, wasPieceEliminated, eliminatedPiece};
 }
@@ -76,68 +79,16 @@ std::vector<std::pair<int, int>> Board::getValidMoves(int startX, int startY){
 
     if (!piece) return validMoves;
 
-    if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(piece)) {
-        return getValidMovesForPawn(pawnPiece, startX, startY);
-    }
-
     for (int row = 0; row < 8; row++) {
         for (int col = 0; col < 8; col++) {
-            if (piece->isValidMovement(startX, startY, row, col) && isPathClear(startX, startY, row, col)){
+            if(isPathClear(startX, startY, row, col)){
                 auto target = matrix[row][col];
-                if(!target){
+                if(target && piece->canEliminate(startX, startY, row, col, target->getColor())){
+                    validMoves.emplace_back(row,col);
+                }
+                else if(!target && piece->isValidMovement(startX, startY, row, col)){
                     validMoves.emplace_back(row, col);
                 }
-                else if(target->getColor() != piece->getColor() && isPathClear(startX, startY, row, col)){
-                    validMoves.emplace_back(row, col);
-                }
-            }
-        }
-    }
-
-    return validMoves;
-}
-
-
-std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePawn(int startX, int startY, int endX, int endY) {
-    std::shared_ptr<Pawn> pawnPiece = std::dynamic_pointer_cast<Pawn>(getPieceAt(startX, startY));
-    
-    if (endX == startX && endY == startY){
-        return {false, false, nullptr};
-    }
-
-    auto target = matrix[endX][endY];
-    std::shared_ptr<BasePiece> eliminatedPiece = nullptr;
-    bool wasPieceEliminated = false;
-    bool wasMoved = false; 
-
-    if (target && pawnPiece->canEliminate(startX, startY, endX, endY, target->getColor())){
-        eliminatedPiece = std::move(target);
-        wasPieceEliminated = true;
-    } else if (target) {
-        return {false, false, nullptr};
-    }
-
-    if((pawnPiece->isValidMovement(startX, startY, endX, endY) || wasPieceEliminated) && isPathClear(startX, startY, endX, endY)){
-        matrix[endX][endY] = std::move(matrix[startX][startY]);
-        wasMoved = true;
-        pawnPiece->updateFirstMove();
-    }
-    return {wasMoved, wasPieceEliminated, eliminatedPiece};
-
-}
-
-std::vector<std::pair<int, int>> Board::getValidMovesForPawn(std::shared_ptr<Pawn> piece, int startX, int startY){
-    std::vector<std::pair<int, int>> validMoves;
-    for (int row = 0; row < 8; row++) {
-        for (int col = 0; col < 8; col++) {
-            auto target = matrix[row][col];
-            if(!target){
-                if(piece->isValidMovement(startX, startY, row, col) && isPathClear(startX, startY, row, col)){
-                    validMoves.emplace_back(row, col);
-                }
-            }
-            else if(piece->canEliminate(startX, startY, row, col, target->getColor())){ 
-                validMoves.emplace_back(row, col);
             }
         }
     }

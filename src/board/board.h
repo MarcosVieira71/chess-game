@@ -27,8 +27,6 @@ public:
     std::tuple<bool,bool,std::shared_ptr<BasePiece>> movePiece(int startX, int startY, int endX, int endY);
 
 private:
-    std::tuple<bool, bool, std::shared_ptr<BasePiece>> movePawn(int startX, int startY, int endX, int endY);
-    std::vector<std::pair<int, int>> getValidMovesForPawn(std::shared_ptr<Pawn> piece, int startX, int startY);
     bool isPathClear(int startX, int startY, int endX, int endY);
     bool doesKingHaveMoves(Colors kingColor);
     bool hasAValidMove (Colors kingColor);
