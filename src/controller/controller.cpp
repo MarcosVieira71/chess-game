@@ -43,9 +43,8 @@ void Controller::attemptMovement(int row, int col){
         if (pieceEliminated) view->removePiece(eliminatedPiece);
         view->updateSquares(row, col, board->getPieceAt(row, col));
         nextTurn(); 
-        if(board->isCheckMate(currentPlayer)){
-            printf("cabou-se\n");
-        };
+        checkGameOver();
+        
     }
     isSelectingPiece = false;
     return;
@@ -63,5 +62,17 @@ void Controller::highlightValidMoves(int row, int col){
             highlightColor = redColor;
         }
         view->highlightSquare(move.first, move.second, highlightColor); 
+    }
+}
+
+void Controller::checkGameOver(){
+    QString state;
+    if(board->isCheckMate(currentPlayer)){
+        state = (currentPlayer == Colors::White) ? "Black wins!" : "White wins!";
+        emit gameOver(state);
+    }
+    else if(board->isStalemate(currentPlayer)){
+        state = "Draw!";
+        emit gameOver(state);
     }
 }

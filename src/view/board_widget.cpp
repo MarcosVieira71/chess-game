@@ -86,6 +86,9 @@ void BoardWidget::updateSquares(int row, int col, std::shared_ptr<BasePiece> pie
 void BoardWidget::drawPieces(QPainter& painter){
     for(auto squares: squaresUpdate){
         auto piece = squares.first.lock();
+        
+        if (!piece) continue;
+        
         auto position = squares.second;
         auto row = position.first;
         auto col = position.second;
@@ -119,6 +122,10 @@ void BoardWidget::mousePressEvent(QMouseEvent* event){
     emit squareClicked(row, col);
 
 }
+void BoardWidget::clearBoard() {
+    squaresUpdate.clear();
+    update(); 
+}
+
 
 BoardWidget::~BoardWidget() {}
-

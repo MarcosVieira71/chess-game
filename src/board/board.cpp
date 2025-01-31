@@ -215,10 +215,7 @@ bool Board::isCheckMate(Colors kingColor){
         return false;
     }
 
-    bool kingHasMoves = doesKingHaveMoves(kingColor);
-    bool undoCheck = canUndoCheck(kingColor);
-
-    return !kingHasMoves && !undoCheck;
+    return !doesKingHaveMoves(kingColor) && !hasAValidMove(kingColor);;
 }
 
 bool Board::doesKingHaveMoves(Colors kingColor){
@@ -232,7 +229,7 @@ bool Board::doesKingHaveMoves(Colors kingColor){
     return false;
 }
 
-bool Board::canUndoCheck(Colors kingColor){
+bool Board::hasAValidMove(Colors kingColor){
     for(int row = 0; row < 8; row++){
         for(int col = 0; col < 8; col++){
             auto piece = matrix[row][col];
@@ -250,9 +247,7 @@ bool Board::canUndoCheck(Colors kingColor){
 }
 
 
-// //O REI não está em cheque e também nenhuma de suas peças tem moviemntos válidos
-// bool Board::isStaleMate(Colors kingColor){
-//     if(!isInCheck(kingColor)){
+bool Board::isStalemate(Colors kingColor){
+    return !isInCheck(kingColor) && !hasAValidMove(kingColor);
 
-//     }
-// }
+}

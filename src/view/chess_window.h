@@ -10,9 +10,11 @@ class ChessWindow : public QMainWindow {
 public:
     explicit ChessWindow(QWidget* parent = nullptr);
     virtual ~ChessWindow(); 
+    void resetGame();
 
 private:
+    void displayGameOverMessage(QString message);
     BoardWidget* chessBoard;
-    Controller* controller;
+    std::unique_ptr<Controller> controller;
 };
 

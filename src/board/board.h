@@ -19,6 +19,7 @@ public:
     void clearBoard();
     void setupBoard();
     bool willMoveCauseACheck(int startX, int startY, int endX, int endY);
+    bool isStalemate(Colors kingColor);
     bool isCheckMate(Colors kingColor);
     std::pair<int, int> findKingPos(Colors kingColor);
     std::shared_ptr<BasePiece> getPieceAt(int row, int col);
@@ -30,10 +31,9 @@ private:
     std::vector<std::pair<int, int>> getValidMovesForPawn(std::shared_ptr<Pawn> piece, int startX, int startY);
     bool isPathClear(int startX, int startY, int endX, int endY);
     bool doesKingHaveMoves(Colors kingColor);
-    bool canUndoCheck (Colors kingColor);
+    bool hasAValidMove (Colors kingColor);
     bool isInCheck(Colors kingColor);
 
-    
     std::array<std::array<std::shared_ptr<BasePiece>, 8>, 8> matrix;
 };
 

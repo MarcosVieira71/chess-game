@@ -20,6 +20,8 @@ public:
     void updateSquares(int row, int col, std::shared_ptr<BasePiece> piece);
     void highlightSquare(int row, int col, const QColor& color);
     void removePiece(std::shared_ptr<BasePiece> piece);
+    void clearBoard();
+
 
 
 protected:
