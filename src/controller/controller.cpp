@@ -1,4 +1,5 @@
 #include "controller.h"
+#include <QDebug>
 #include <stdio.h>
 #include <iostream>
 
@@ -7,6 +8,7 @@ void Controller::initializeGame() {
     board->setupBoard();
     showPieces();
     QObject::connect(view, &BoardWidget::squareClicked, this, &Controller::handleMouseClick);
+    view->update();
 }
 
 void Controller::showPieces(){

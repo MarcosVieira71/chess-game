@@ -13,11 +13,10 @@ public:
     isSelectingPiece(false) {
         initializeGame();
     };
-    void initializeGame();
-    
 signals:
     void gameOver(QString message);
 private:
+    void initializeGame();
     void showPieces();
     void handleMouseClick(int x, int y);
     void attemptMovement(int row, int col);
