@@ -7,9 +7,6 @@ check_os() {
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "Sistema detectado: Linux"
     install_linux
-  elif [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "Sistema detectado: macOS"
-    install_macos
   else
     echo "Sistema não suportado. Abortando."
     exit 1
