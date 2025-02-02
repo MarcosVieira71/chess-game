@@ -10,8 +10,8 @@ Para instalar as dependências e preparar o projeto para uso, basta seguir os pa
 
 1. Clone o repositório:
     ```bash
-    git clone <url-do-repositorio>
-    cd <diretorio-do-projeto>
+    git clone https://github.com/MarcosVieira71/chess-game.git
+    cd chess-game
     ```
 
 2. Execute o script `install.sh` para instalar as dependências:
