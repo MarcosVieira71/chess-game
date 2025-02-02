@@ -1,5 +1,4 @@
 #include "king.h"
-#include <stdio.h>
 
 PieceType King::getType() const{
     return PieceType::King;

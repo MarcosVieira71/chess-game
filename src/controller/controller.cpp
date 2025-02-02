@@ -1,14 +1,29 @@
 #include "controller.h"
+
 #include <QDebug>
-#include <stdio.h>
-#include <iostream>
+#include <QInputDialog>
+
 
 void Controller::initializeGame() {
+    if (!board || !view) {
+        return;
+    }
+
     board->clearBoard();
     board->setupBoard();
     showPieces();
-    QObject::connect(view, &BoardWidget::squareClicked, this, &Controller::handleMouseClick);
+
+    connectSignals();
+
     view->update();
+}
+
+void Controller::connectSignals(){
+    QObject::disconnect(view, &BoardWidget::squareClicked, this, &Controller::handleMouseClick);
+    QObject::disconnect(board.get(), &Board::promotionRequired, this, &Controller::handlePawnPromotion);
+
+    QObject::connect(view, &BoardWidget::squareClicked, this, &Controller::handleMouseClick);
+    QObject::connect(board.get(), &Board::promotionRequired, this, &Controller::handlePawnPromotion);
 }
 
 void Controller::showPieces(){
@@ -52,6 +67,7 @@ void Controller::attemptMovement(int row, int col){
     return;
 }
 
+
 void Controller::nextTurn(){
     currentPlayer = (currentPlayer == Colors::White) ? Colors::Black : Colors::White;
 }
@@ -76,5 +92,21 @@ void Controller::checkGameOver(){
     else if(board->isStalemate(currentPlayer)){
         state = "Draw!";
         emit gameOver(state);
+    }
+}
+
+void Controller::handlePawnPromotion(int row, int col, Colors color) {
+    QStringList options = {"Queen", "Rook", "Bishop", "Knight"};
+    bool ok;
+    QString choice = QInputDialog::getItem(nullptr, "Pawn Promotion", "Choose a piece:", options, 0, false, &ok);
+
+    if (ok) {
+        std::shared_ptr<BasePiece> newPiece;
+        if (choice == "Queen") newPiece = std::make_shared<Queen>(color);
+        else if (choice == "Rook") newPiece = std::make_shared<Rook>(color);
+        else if (choice == "Bishop") newPiece = std::make_shared<Bishop>(color);
+        else if (choice == "Knight") newPiece = std::make_shared<Knight>(color);
+        board->replacePiece(row, col, newPiece);
+        view->updateSquares(row, col, newPiece);
     }
 }

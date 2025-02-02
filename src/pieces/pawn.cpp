@@ -1,6 +1,4 @@
 #include "pawn.h"
-#include <cmath>
-#include <iostream>
 
 PieceType Pawn::getType() const{
     return PieceType::Pawn;

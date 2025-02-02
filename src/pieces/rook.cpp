@@ -1,5 +1,5 @@
 #include "rook.h"
-#include <iostream>
+
 PieceType Rook::getType() const{
     return PieceType::Rook;
 }

@@ -4,6 +4,7 @@
 #include <memory>
 #include <tuple>
 #include <vector>
+#include <QObject>
 
 #include "pieces/base_piece.h"
 #include "pieces/pawn.h"
@@ -13,11 +14,12 @@
 #include "pieces/knight.h"
 #include "pieces/rook.h"
 
-class Board
-{
+class Board: public QObject{
+    Q_OBJECT
 public:
     void clearBoard();
     void setupBoard();
+    void replacePiece(int row, int col, std::shared_ptr<BasePiece> newPiece);
     bool willMoveCauseACheck(int startX, int startY, int endX, int endY);
     bool isStalemate(Colors kingColor);
     bool isCheckMate(Colors kingColor);
@@ -33,6 +35,10 @@ private:
     bool isInCheck(Colors kingColor);
 
     std::array<std::array<std::shared_ptr<BasePiece>, 8>, 8> matrix;
+
+signals:
+    void promotionRequired(int row, int col, Colors color);
+
 };
 
 

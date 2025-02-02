@@ -1,5 +1,4 @@
 #include "queen.h"
-#include <cmath>
 
 PieceType Queen::getType() const{
     return PieceType::Queen;

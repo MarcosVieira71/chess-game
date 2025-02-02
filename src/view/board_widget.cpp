@@ -1,6 +1,3 @@
-#include <QDebug>
-#include <iostream> 
-
 #include "board_widget.h"
 
 

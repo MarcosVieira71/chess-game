@@ -1,5 +1,4 @@
 #include "knight.h"
-#include <cmath>
 
 PieceType Knight::getType() const{
     return PieceType::Knight;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "base_piece.h"
-#include <cmath>
 
 class King : public BasePiece {
 public:

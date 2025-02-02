@@ -3,10 +3,10 @@
 #include "pieces/base_piece.h"
 
 #include <map>
-#include <QWidget>
-#include <QPainter>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QPixmap>
+#include <QWidget>
 #include <QString>
 #include <string>
 #include <utility>

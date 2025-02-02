@@ -1,8 +1,9 @@
 #pragma once
 
-#include <memory>
 #include "board/board.h"
 #include "view/board_widget.h"
+
+#include <memory>
 
 class Controller: public QObject{
     Q_OBJECT
@@ -13,17 +14,23 @@ public:
     isSelectingPiece(false) {
         initializeGame();
     };
+
 signals:
     void gameOver(QString message);
+
+
 private:
     void initializeGame();
     void showPieces();
+    void connectSignals();
     void handleMouseClick(int x, int y);
     void attemptMovement(int row, int col);
     void highlightValidMoves(int row, int col);
     void selectBoardSquare(int row, int col);
     void nextTurn();
     void checkGameOver();
+    void handlePawnPromotion(int row, int col, Colors color);
+
 
     std::unique_ptr<Board> board;           
     const QColor blueColor = QColor(0, 0, 255, 128);

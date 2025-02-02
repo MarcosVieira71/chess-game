@@ -1,6 +1,6 @@
-#include "board.h"
-#include "stdio.h"
 #include <tuple>
+
+#include "board.h"
 
 void Board::clearBoard() {
     for (auto& row : matrix) {
@@ -30,11 +30,13 @@ void Board::setupBoard() {
     }
 }
 
+void Board::replacePiece(int row, int col, std::shared_ptr<BasePiece> newPiece) {
+    matrix[row][col] = newPiece;
+}
 
 std::shared_ptr<BasePiece> Board::getPieceAt(int row, int col){
     return matrix[row][col];
 }
-
 
 
 // Retorna {movimento se foi bem-sucedido, se peça foi eliminada e a peça eliminada (ou nullptr)}
@@ -68,6 +70,10 @@ std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, 
         wasMoved = true;
         if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(selectedPiece)) {
             pawnPiece->updateFirstMove();
+            if ((pawnPiece->getColor() == Colors::White && endX == 7) || 
+            (pawnPiece->getColor() == Colors::Black && endX == 0)) {
+            emit promotionRequired(endX, endY, pawnPiece->getColor()); 
+        }
         }
     }
     return {wasMoved, wasPieceEliminated, eliminatedPiece};
@@ -196,7 +202,6 @@ bool Board::hasAValidMove(Colors kingColor){
     }
     return false;
 }
-
 
 bool Board::isStalemate(Colors kingColor){
     return !isInCheck(kingColor) && !hasAValidMove(kingColor);

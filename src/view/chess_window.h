@@ -1,6 +1,10 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QVBoxLayout>
+#include <QWidget>
+
 #include "controller/controller.h"
 #include "board_widget.h"
 

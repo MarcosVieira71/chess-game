@@ -1,6 +1,4 @@
 #include "bishop.h"
-#include <cmath>
-#include <iostream>
 
 PieceType Bishop::getType() const{
     return PieceType::Bishop;
