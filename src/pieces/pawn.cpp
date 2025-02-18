@@ -27,3 +27,14 @@ bool Pawn::canEliminate(int startX, int startY, int endX, int endY, Colors targe
     }
     return false;
 }
+
+void Pawn::onMove(){
+    if(isFirstMove){
+        this->updateFirstMove();
+    }
+}
+
+bool Pawn::needsPromotion(int endX){
+    return (color == Colors::White && endX == 7) || 
+    (color == Colors::Black && endX == 0);
+}

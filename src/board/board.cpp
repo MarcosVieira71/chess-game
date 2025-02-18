@@ -68,13 +68,10 @@ std::tuple<bool, bool, std::shared_ptr<BasePiece>> Board::movePiece(int startX, 
     if((selectedPiece->isValidMovement(startX, startY, endX, endY) || wasPieceEliminated)){
         matrix[endX][endY] = std::move(matrix[startX][startY]);
         wasMoved = true;
-        if (auto pawnPiece = std::dynamic_pointer_cast<Pawn>(selectedPiece)) {
-            pawnPiece->updateFirstMove();
-            if ((pawnPiece->getColor() == Colors::White && endX == 7) || 
-            (pawnPiece->getColor() == Colors::Black && endX == 0)) {
-            emit promotionRequired(endX, endY, pawnPiece->getColor()); 
-        }
-        }
+        selectedPiece->onMove();
+        if(selectedPiece->needsPromotion(endX))
+            emit promotionRequired(endX, endY, selectedPiece->getColor()); 
+        
     }
     return {wasMoved, wasPieceEliminated, eliminatedPiece};
 }
