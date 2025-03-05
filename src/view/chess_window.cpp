@@ -44,10 +44,8 @@ void ChessWindow::displayGameOverMessage(QString message) {
 void ChessWindow::resetGame() {
     chessBoard->clearBoard();
     disconnect(controller.get(), &Controller::gameOver, this, &ChessWindow::displayGameOverMessage);
-
-    controller.reset();
-    controller = std::make_unique<Controller>(std::make_unique<Board>(), chessBoard);
-    
+    auto newController = std::make_unique<Controller>(std::make_unique<Board>(), chessBoard);
+    controller = std::move(newController);
     connect(controller.get(), &Controller::gameOver, this, &ChessWindow::displayGameOverMessage);
 }
 
